@@ -25,4 +25,10 @@ resource "stackit_ske_cluster" "this" {
     start                                = var.maintenance_start
     end                                  = var.maintenance_end
   }
+
+  extensions = {
+    application_load_balancer = {
+      enabled = var.enable_alb_extension
+    }
+  }
 }

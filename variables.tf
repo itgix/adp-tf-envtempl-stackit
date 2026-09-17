@@ -79,6 +79,12 @@ variable "create_cluster" {
   default     = true
 }
 
+variable "enable_alb_extension" {
+  description = "Whether to enable the STACKIT Application Load Balancer extension on the SKE cluster"
+  type        = bool
+  default     = true
+}
+
 variable "kubernetes_version" {
   description = "Minimum Kubernetes version for the SKE cluster"
   type        = string

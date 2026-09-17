@@ -1,3 +1,20 @@
+variable "create_project" {
+  description = "Whether to create a new STACKIT project. If false, existing_project_id must be set."
+  type        = bool
+  default     = true
+}
+
+variable "existing_project_id" {
+  description = "ID of an existing STACKIT project to use when create_project is false."
+  type        = string
+  default     = null
+
+  validation {
+    condition     = var.existing_project_id != null || var.create_project == true
+    error_message = "existing_project_id must be set when create_project is false."
+  }
+}
+
 variable "create_network_area" {
   description = "Whether to create a new Network Area. If false, existing_network_area_id must be set."
   type        = bool

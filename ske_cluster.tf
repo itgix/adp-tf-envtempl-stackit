@@ -1,7 +1,7 @@
 resource "stackit_ske_cluster" "this" {
   count = var.create_cluster ? 1 : 0
 
-  project_id             = stackit_resourcemanager_project.this.project_id
+  project_id             = local.project_id
   name                   = local.cluster_name
   kubernetes_version_min = var.kubernetes_version
 

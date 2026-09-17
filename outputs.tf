@@ -41,8 +41,16 @@ output "owner_email" {
   value = var.owner_email
 }
 
+output "create_project" {
+  value = var.create_project
+}
+
+output "existing_project_id" {
+  value = var.existing_project_id
+}
+
 output "project_id" {
-  value = stackit_resourcemanager_project.this.project_id
+  value = local.project_id
 }
 
 # Network

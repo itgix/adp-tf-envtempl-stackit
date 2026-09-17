@@ -21,7 +21,8 @@ resource "stackit_mongodbflex_instance" "this" {
   }
 
   options = {
-    type = var.mongodb_type
+    type                       = var.mongodb_type
+    point_in_time_window_hours = var.mongodb_point_in_time_window_hours
   }
 }
 

@@ -6,14 +6,9 @@ resource "stackit_postgresflex_instance" "this" {
   project_id      = local.project_id
   name            = local.postgres_name
   version         = var.postgres_version
-  replicas        = var.postgres_replicas
   acl             = local.postgres_acl_list
   backup_schedule = var.postgres_backup_schedule
-
-  flavor = {
-    cpu = var.postgres_cpu
-    ram = var.postgres_ram
-  }
+  flavor_id       = var.postgres_flavor_id
 
   storage = {
     class = var.postgres_storage_class

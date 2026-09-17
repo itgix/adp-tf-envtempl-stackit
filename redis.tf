@@ -1,4 +1,4 @@
-resource "stackit_redis_instance" "this" {
+resource "stackit_valkey_instance" "this" {
   count = var.create_redis ? 1 : 0
 
   depends_on = [stackit_secretsmanager_instance.this]
@@ -13,9 +13,9 @@ resource "stackit_redis_instance" "this" {
   }
 }
 
-resource "stackit_redis_credential" "this" {
+resource "stackit_valkey_credential" "this" {
   count = var.create_redis ? 1 : 0
 
   project_id  = local.project_id
-  instance_id = stackit_redis_instance.this[0].instance_id
+  instance_id = stackit_valkey_instance.this[0].instance_id
 }

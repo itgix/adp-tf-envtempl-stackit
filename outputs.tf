@@ -224,19 +224,19 @@ output "redis_plan_name" {
 }
 
 output "redis_instance_id" {
-  value = var.create_redis ? stackit_redis_instance.this[0].instance_id : null
+  value = var.create_redis ? stackit_valkey_instance.this[0].instance_id : null
 }
 
 output "redis_host" {
-  value = var.create_redis ? stackit_redis_credential.this[0].host : null
+  value = var.create_redis ? stackit_valkey_credential.this[0].host : null
 }
 
 output "redis_port" {
-  value = var.create_redis ? stackit_redis_credential.this[0].port : null
+  value = var.create_redis ? stackit_valkey_credential.this[0].port : null
 }
 
 output "redis_username" {
-  value = var.create_redis ? stackit_redis_credential.this[0].username : null
+  value = var.create_redis ? stackit_valkey_credential.this[0].username : null
 }
 
 # MongoDB

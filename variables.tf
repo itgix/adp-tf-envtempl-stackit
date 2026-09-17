@@ -158,6 +158,12 @@ variable "mariadb_plan_name" {
   default     = "stackit-mariadb-1-1-10"
 }
 
+variable "postgres_flavor_id" {
+  description = "Flavor ID for the PostgreSQL instance (e.g. '2.4-single'). Use stackit_postgresflex_flavors datasource to list available flavors."
+  type        = string
+  default     = "2.4-single"
+}
+
 # PostgreSQL
 variable "create_postgres" {
   description = "Whether to create a PostgresFlex instance"
@@ -273,6 +279,12 @@ variable "mongodb_type" {
   description = "MongoDB instance type: Single, Replica, or Sharded"
   type        = string
   default     = "Single"
+}
+
+variable "mongodb_point_in_time_window_hours" {
+  description = "Point-in-time recovery window in hours for MongoDB"
+  type        = number
+  default     = 24
 }
 
 variable "mongodb_backup_schedule" {

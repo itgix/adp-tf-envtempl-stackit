@@ -155,7 +155,7 @@ variable "mariadb_version" {
 variable "mariadb_plan_name" {
   description = "MariaDB plan name (e.g. stackit-mariadb-1-1-10)"
   type        = string
-  default     = "stackit-mariadb-1-1-10"
+  default     = "stackit-mariadb-1.4.10-single"
 }
 
 variable "postgres_node_type" {

@@ -149,7 +149,7 @@ variable "create_mariadb" {
 variable "mariadb_version" {
   description = "MariaDB version"
   type        = string
-  default     = "10.6"
+  default     = "10.11"
 }
 
 variable "mariadb_plan_name" {
@@ -237,6 +237,12 @@ variable "postgres_storage_size" {
   default     = 20
 }
 
+variable "postgres_retention_days" {
+  description = "Number of days to retain PostgreSQL backups (32-90)"
+  type        = number
+  default     = 32
+}
+
 # Redis
 variable "create_redis" {
   description = "Whether to create a Redis instance"
@@ -294,9 +300,9 @@ variable "mongodb_backup_schedule" {
 }
 
 variable "mongodb_cpu" {
-  description = "Number of CPUs for the MongoDB instance"
+  description = "Number of CPUs for the MongoDB instance (Single type requires 1)"
   type        = number
-  default     = 2
+  default     = 1
 }
 
 variable "mongodb_ram" {
@@ -308,10 +314,7 @@ variable "mongodb_ram" {
 variable "mongodb_storage_class" {
   description = "Storage class for the MongoDB instance (e.g. premium-perf2-stackit)"
   type        = string
-  default     = "premium-perf2-stackit"
-}
-
-variable "mongodb_storage_size" {
+  default     = "premium-perf2-mongodb" {
   description = "Storage size in GB for the MongoDB instance"
   type        = number
   default     = 20

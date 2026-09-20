@@ -159,9 +159,9 @@ variable "mariadb_plan_name" {
 }
 
 variable "postgres_node_type" {
-  description = "PostgreSQL node type: Single or Replica"
+  description = "PostgreSQL node type: single or replica"
   type        = string
-  default     = "Single"
+  default     = "single"
 }
 
 # PostgreSQL
@@ -290,7 +290,10 @@ variable "mongodb_type" {
 variable "mongodb_point_in_time_window_hours" {
   description = "Point-in-time recovery window in hours for MongoDB"
   type        = number
-  default     = 30 {
+  default     = 30
+}
+
+variable "mongodb_backup_schedule" {
   description = "Backup schedule in cron format"
   type        = string
   default     = "0 2 * * *"

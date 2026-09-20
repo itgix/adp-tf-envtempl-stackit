@@ -6,7 +6,7 @@ data "stackit_postgresflex_flavors" "this" {
 locals {
   postgres_flavor_id = var.create_postgres ? one([
     for f in data.stackit_postgresflex_flavors.this[0].flavors :
-    f.id if f.cpu == var.postgres_cpu && f.memory == var.postgres_ram && f.node_type == var.postgres_node_type
+    f.id if f.cpu == var.postgres_cpu && f.memory == var.postgres_ram && lower(f.node_type) == lower(var.postgres_node_type)
   ]) : null
 }
 

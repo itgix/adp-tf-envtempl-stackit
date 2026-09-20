@@ -530,8 +530,10 @@ PLANS:
     stackit beta service-enablement list-plans --service-id opensearch --region eu01
 
   Example plans:
-    stackit-opensearch-1.2.10-single    (1 node,  ~1 CPU / 2 GB RAM / 10 GB disk)
-    stackit-opensearch-1.2.10-replica   (3 nodes, HA)
+    stackit-opensearch-2.4.10-single    (1 node,  ~2 CPU / 4 GB RAM / 10 GB disk)
+    stackit-opensearch-2.4.10-replica   (3 nodes, HA)
+    stackit-opensearch-2.8.50-single    (1 node,  ~2 CPU / 8 GB RAM / 50 GB disk)
+    stackit-opensearch-2.8.50-replica   (3 nodes, HA)
 
 Terraform resources:
   stackit_opensearch_instance    -> the OpenSearch cluster

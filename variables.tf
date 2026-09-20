@@ -339,7 +339,7 @@ variable "opensearch_version" {
 variable "opensearch_plan_name" {
   description = "OpenSearch plan name (e.g. stackit-opensearch-1.2.10-replica)"
   type        = string
-  default     = "stackit-opensearch-1.2.10-single"
+  default     = "stackit-opensearch-2.4.10-single"
 }
 
 variable "opensearch_additional_acl_cidrs" {

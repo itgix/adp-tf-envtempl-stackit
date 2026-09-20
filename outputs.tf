@@ -195,7 +195,7 @@ output "postgres_instance_id" {
 }
 
 output "postgres_host" {
-  value = var.create_postgres ? stackit_postgresflex_instance.this[0].connection_info.write[0].host : null
+  value = var.create_postgres ? stackit_postgresflex_instance.this[0].connection_info.write.host : null
 }
 
 output "postgres_port" {

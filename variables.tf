@@ -253,7 +253,7 @@ variable "redis_version" {
 variable "redis_plan_name" {
   description = "Redis plan name (e.g. stackit-redis-1-1-10)"
   type        = string
-  default     = "stackit-redis-1-1-10"
+  default     = "stackit-keyvalue-1.4.10-single"
 }
 
 # MongoDB

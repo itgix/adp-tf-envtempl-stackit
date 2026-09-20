@@ -247,11 +247,10 @@ variable "create_redis" {
 variable "redis_version" {
   description = "Redis version"
   type        = string
-  default     = "7.2"
+  default     = "8"
 }
 
-variable "redis_plan_name" {
-  description = "Redis plan name (e.g. stackit-redis-1-1-10)"
+variable "redis_plan_name"  description = "Redis plan name (e.g. stackit-redis-1-1-10)"
   type        = string
   default     = "stackit-redis-1-1-10"
 }

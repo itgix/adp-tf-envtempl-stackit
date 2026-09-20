@@ -278,10 +278,11 @@ Transfer Network:
 DATABASES (MariaDB, PostgreSQL, Redis, MongoDB)
 ------------------------------------------------
 All databases are controlled via toggle variables in terraform.tfvars:
-  create_mariadb  = true/false
-  create_postgres = true/false
-  create_redis    = true/false
-  create_mongodb  = true/false
+  create_mariadb    = true/false
+  create_postgres   = true/false
+  create_redis      = true/false
+  create_mongodb    = true/false
+  create_opensearch = true/false
 
 POSTGRESFLEX vs SQL SERVER FLEX vs MARIADB:
   MariaDB:
@@ -341,6 +342,11 @@ PRIVATE NETWORK SUPPORT:
   - Network access controlled via sgw_acl:
       parameters = { sgw_acl = "10.1.0.0/25" }
 
+  OpenSearch:
+  - Same as MariaDB/Redis - shared managed infrastructure, no private network placement
+  - Network access controlled via sgw_acl:
+      parameters = { sgw_acl = "10.1.0.0/25" }
+
   PostgresFlex:
   - Has a network block with access_scope field
   - access_scope = "SNA"    -> STACKIT Network Area (private network) - PRIVATE PREVIEW only
@@ -354,6 +360,7 @@ SUMMARY:
   -----------    ---------------    --------------
   MariaDB        No                 sgw_acl (CIDR list)
   Redis          No                 sgw_acl (CIDR list)
+  OpenSearch     No                 sgw_acl (CIDR list)
   PostgresFlex   Preview only       acl (CIDR list) or network.access_scope = "SNA"
 
 ACL CONFIGURATION:
@@ -361,9 +368,10 @@ ACL CONFIGURATION:
   This means only resources inside your private network can access the databases.
 
   Each database has its own variable to add extra CIDRs independently:
-    mariadb_additional_acl_cidrs  = ["<cidr1>", "<cidr2>"]
-    postgres_additional_acl_cidrs = ["<cidr1>", "<cidr2>"]
-    redis_additional_acl_cidrs    = ["<cidr1>", "<cidr2>"]
+    mariadb_additional_acl_cidrs     = ["<cidr1>", "<cidr2>"]
+    postgres_additional_acl_cidrs    = ["<cidr1>", "<cidr2>"]
+    redis_additional_acl_cidrs       = ["<cidr1>", "<cidr2>"]
+    opensearch_additional_acl_cidrs  = ["<cidr1>", "<cidr2>"]
 
   network_ipv4_prefix is always included automatically - you only need to add the extra ones.
 
@@ -391,12 +399,14 @@ Same pattern applies for all databases:
   terraform state show stackit_mariadb_credential.this[0]
   terraform state show stackit_postgresflex_user.this[0]
   terraform state show stackit_mongodbflex_user.this[0]
+  terraform state show stackit_opensearch_credential.this[0]
 
 All fields available per database:
   MariaDB    -> host, port, username, password, uri
   PostgreSQL -> host (connection_info.write.host), port, username, password
   Redis      -> host, port, username, password, uri, load_balanced_host
   MongoDB    -> host, port, username, password, uri
+  OpenSearch -> host, port, username, password, uri, hosts, scheme
 
 NOTE: Credentials do not expire. They are static username/password pairs valid
       until explicitly deleted or rotated via rotate_when_changed.
@@ -494,6 +504,67 @@ Option B - Pre-provision volumes via Terraform:
 NOTE: For most stateful workloads (databases, message queues, etc.) Option A
       is the recommended approach as it integrates natively with Kubernetes
       StatefulSets and handles volume lifecycle automatically.
+
+
+OPENSEARCH
+----------
+STACKIT OpenSearch is a managed OpenSearch service running on shared infrastructure.
+It is compatible with the OpenSearch and Elasticsearch APIs.
+
+Toggle:
+  create_opensearch = true   -> creates the instance and a credential
+  create_opensearch = false  -> nothing is created (default)
+
+Key variables:
+  opensearch_version                -> OpenSearch major version (default: "2")
+  opensearch_plan_name              -> plan controlling resources and HA (see plans below)
+  opensearch_additional_acl_cidrs   -> extra CIDRs allowed to connect, on top of network_ipv4_prefix
+
+PLANS:
+  Plans follow the naming pattern: stackit-opensearch-<size>-<topology>
+  Topology:
+    single   -> 1 node, no HA, suitable for dev/test
+    replica  -> 3 nodes, HA, suitable for production
+
+  List all available plans:
+    stackit beta service-enablement list-plans --service-id opensearch --region eu01
+
+  Example plans:
+    stackit-opensearch-1.2.10-single    (1 node,  ~1 CPU / 2 GB RAM / 10 GB disk)
+    stackit-opensearch-1.2.10-replica   (3 nodes, HA)
+
+Terraform resources:
+  stackit_opensearch_instance    -> the OpenSearch cluster
+  stackit_opensearch_credential  -> username + password to connect
+
+Example:
+  resource "stackit_opensearch_instance" "this" {
+    project_id = local.project_id
+    name       = local.opensearch_name
+    version    = var.opensearch_version
+    plan_name  = var.opensearch_plan_name
+    parameters = {
+      sgw_acl = local.opensearch_acl_cidrs
+    }
+  }
+
+  resource "stackit_opensearch_credential" "this" {
+    project_id  = local.project_id
+    instance_id = stackit_opensearch_instance.this[0].instance_id
+  }
+
+ACCESS:
+  - Runs on shared managed infrastructure - no private network placement
+  - Access is controlled via sgw_acl (comma-separated CIDRs)
+  - By default restricted to network_ipv4_prefix, so only pods in your SKE cluster can connect
+  - The credential exposes: host, port, username, password, uri, hosts, scheme
+  - Connection uses HTTPS (scheme = https, default port 9200)
+
+GETTING CREDENTIALS:
+  terraform output opensearch_host
+  terraform output opensearch_port
+  terraform output opensearch_username
+  terraform state show stackit_opensearch_credential.this[0]   # includes password and uri
 
 
 SECRETS MANAGEMENT

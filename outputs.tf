@@ -296,6 +296,39 @@ output "mongodb_username" {
   value = var.create_mongodb ? stackit_mongodbflex_user.this[0].username : null
 }
 
+# OpenSearch
+output "create_opensearch" {
+  value = var.create_opensearch
+}
+
+output "opensearch_name" {
+  value = local.opensearch_name
+}
+
+output "opensearch_version" {
+  value = var.opensearch_version
+}
+
+output "opensearch_plan_name" {
+  value = var.opensearch_plan_name
+}
+
+output "opensearch_instance_id" {
+  value = var.create_opensearch ? stackit_opensearch_instance.this[0].instance_id : null
+}
+
+output "opensearch_host" {
+  value = var.create_opensearch ? stackit_opensearch_credential.this[0].host : null
+}
+
+output "opensearch_port" {
+  value = var.create_opensearch ? stackit_opensearch_credential.this[0].port : null
+}
+
+output "opensearch_username" {
+  value = var.create_opensearch ? stackit_opensearch_credential.this[0].username : null
+}
+
 # Secrets Manager
 output "secrets_manager_instance_id" {
   value = var.create_secrets_manager ? stackit_secretsmanager_instance.this[0].instance_id : null

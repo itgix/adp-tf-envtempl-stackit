@@ -323,6 +323,31 @@ variable "mongodb_additional_acl_cidrs" {
   default     = []
 }
 
+# OpenSearch
+variable "create_opensearch" {
+  description = "Whether to create an OpenSearch instance"
+  type        = bool
+  default     = false
+}
+
+variable "opensearch_version" {
+  description = "OpenSearch version"
+  type        = string
+  default     = "2"
+}
+
+variable "opensearch_plan_name" {
+  description = "OpenSearch plan name (e.g. stackit-opensearch-1.2.10-replica)"
+  type        = string
+  default     = "stackit-opensearch-1.2.10-single"
+}
+
+variable "opensearch_additional_acl_cidrs" {
+  description = "Additional CIDRs to allow access to OpenSearch, on top of network_ipv4_prefix"
+  type        = list(string)
+  default     = []
+}
+
 # Secrets Manager
 variable "create_secrets_manager" {
   description = "Whether to create a STACKIT Secrets Manager instance and store database credentials in it"

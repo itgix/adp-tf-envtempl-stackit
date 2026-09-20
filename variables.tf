@@ -312,9 +312,12 @@ variable "mongodb_ram" {
 }
 
 variable "mongodb_storage_class" {
-  description = "Storage class for the MongoDB instance (e.g. premium-perf2-stackit)"
+  description = "Storage class for the MongoDB instance (e.g. premium-perf2-mongodb)"
   type        = string
-  default     = "premium-perf2-mongodb" {
+  default     = "premium-perf2-mongodb"
+}
+
+variable "mongodb_storage_size" {
   description = "Storage size in GB for the MongoDB instance"
   type        = number
   default     = 20

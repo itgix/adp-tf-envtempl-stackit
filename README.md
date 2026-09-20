@@ -570,7 +570,7 @@ INJECTING SECRETS INTO PODS VIA ESO:
 
   ESO is installed via Helm and configured with a ClusterSecretStore pointing to
   STACKIT's Secret Manager endpoint, authenticated with the reader user credentials
-  output by Terraform (secrets_manager_reader_username / secrets_manager_reader_password).
+  output by Terraform (secrets_manager_reader_username).
 
   Example ClusterSecretStore:
     apiVersion: external-secrets.io/v1beta1

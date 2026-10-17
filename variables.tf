@@ -361,8 +361,8 @@ variable "create_secrets_manager" {
   default     = true
 }
 
-variable "secrets_manager_additional_acls" {
-  description = "Additional CIDRs to allow access to the Secrets Manager instance, on top of network_ipv4_prefix. Use [\"0.0.0.0/0\"] to allow access from anywhere (e.g. during provisioning from a local machine)."
+variable "secrets_manager_acls" {
+  description = "ACL CIDRs for the Secrets Manager instance. If empty, all traffic is allowed. Use [\"0.0.0.0/0\"] to explicitly allow all, or restrict to specific CIDRs."
   type        = list(string)
   default     = []
 }

@@ -3,7 +3,7 @@ resource "stackit_secretsmanager_instance" "this" {
 
   project_id = local.project_id
   name       = local.secrets_manager_name
-  acls       = concat([var.network_ipv4_prefix], var.secrets_manager_additional_acls)
+  acls       = length(var.secrets_manager_acls) > 0 ? var.secrets_manager_acls : null
 }
 
 # Write-enabled user — used by Terraform (local-exec) to store secrets
@@ -44,7 +44,7 @@ resource "stackit_service_account_key" "alb_controller" {
 resource "time_sleep" "alb_controller_sa_propagation" {
   count = var.create_service_accounts && var.create_alb_service_account ? 1 : 0
 
-  create_duration = "10s"
+  create_duration = "30s"
   depends_on      = [stackit_service_account.alb_controller]
 }
 

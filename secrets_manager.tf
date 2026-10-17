@@ -44,7 +44,7 @@ resource "stackit_service_account_key" "alb_controller" {
 resource "time_sleep" "alb_controller_sa_propagation" {
   count = var.create_service_accounts && var.create_alb_service_account ? 1 : 0
 
-  create_duration = "30s"
+  create_duration = "10s"
   depends_on      = [stackit_service_account.alb_controller]
 }
 
@@ -52,7 +52,7 @@ resource "stackit_authorization_project_role_assignment" "alb_controller" {
   count = var.create_service_accounts && var.create_alb_service_account ? 1 : 0
 
   resource_id = local.project_id
-  subject     = "serviceaccount:${stackit_service_account.alb_controller[0].email}"
+  subject     = stackit_service_account.alb_controller[0].email
   role        = "alb.admin"
 
   depends_on = [time_sleep.alb_controller_sa_propagation]

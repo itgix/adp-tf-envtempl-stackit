@@ -358,7 +358,12 @@ variable "opensearch_additional_acl_cidrs" {
 variable "create_secrets_manager" {
   description = "Whether to create a STACKIT Secrets Manager instance and store database credentials in it"
   type        = bool
-  default     = false
+  default     = true
 }
 
+variable "create_alb_service_account" {
+  description = "Whether to create a STACKIT service account with alb.admin role and store its key in Secrets Manager"
+  type        = bool
+  default     = true
+}
 

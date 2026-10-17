@@ -4,6 +4,10 @@ terraform {
       source  = "stackitcloud/stackit"
       version = "~> 0.115.0"
     }
+    vault = {
+      source  = "hashicorp/vault"
+      version = "~> 4.0"
+    }
   }
 
   backend "s3" {
@@ -20,6 +24,16 @@ terraform {
 
 provider "stackit" {
   default_region = var.region
+}
+
+provider "vault" {
+  address          = "https://prod.sm.eu01.stackit.cloud"
+  skip_child_token = true
+
+  auth_login_userpass {
+    username = stackit_secretsmanager_user.writer[0].username
+    password = stackit_secretsmanager_user.writer[0].password
+  }
 }
 
 locals {

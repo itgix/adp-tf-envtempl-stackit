@@ -54,7 +54,7 @@ resource "vault_kv_secret_v2" "alb_controller" {
   count = var.create_alb_service_account && var.create_secrets_manager ? 1 : 0
 
   mount               = stackit_secretsmanager_instance.this[0].instance_id
-  name                = "alb-controller-sa-key"
+  name                = "${var.prefix}-alb-ctrl-key"
   delete_all_versions = true
   data_json = jsonencode({
     value = stackit_service_account_key.alb_controller[0].json
@@ -66,7 +66,7 @@ resource "vault_kv_secret_v2" "eso_reader_credentials" {
   count = var.create_secrets_manager ? 1 : 0
 
   mount               = stackit_secretsmanager_instance.this[0].instance_id
-  name                = "eso-reader-credentials"
+  name                = "${var.prefix}-eso-reader"
   delete_all_versions = true
   data_json = jsonencode({
     username = stackit_secretsmanager_user.reader[0].username

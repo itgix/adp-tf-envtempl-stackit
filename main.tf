@@ -23,7 +23,8 @@ terraform {
 }
 
 provider "stackit" {
-  default_region = var.region
+  default_region       = var.region
+  experimental_features = ["iam"]
 }
 
 provider "vault" {

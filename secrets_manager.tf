@@ -67,7 +67,7 @@ resource "vault_kv_secret_v2" "alb_controller" {
 
 # Store ESO reader credentials in Secrets Manager so ESO can bootstrap itself
 resource "vault_kv_secret_v2" "eso_reader_credentials" {
-  count = var.create_secrets_manager ? 1 : 0
+  count = var.create_service_accounts && var.create_secrets_manager ? 1 : 0
 
   mount               = stackit_secretsmanager_instance.this[0].instance_id
   name                = "${var.prefix}-eso-reader"

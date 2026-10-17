@@ -334,6 +334,16 @@ output "secrets_manager_instance_id" {
   value = var.create_secrets_manager ? stackit_secretsmanager_instance.this[0].instance_id : null
 }
 
+output "secrets_manager_writer_username" {
+  value     = var.create_secrets_manager ? stackit_secretsmanager_user.writer[0].username : null
+  sensitive = true
+}
+
+output "secrets_manager_writer_password" {
+  value     = var.create_secrets_manager ? stackit_secretsmanager_user.writer[0].password : null
+  sensitive = true
+}
+
 output "secrets_manager_reader_username" {
   value     = var.create_secrets_manager ? stackit_secretsmanager_user.reader[0].username : null
   sensitive = true

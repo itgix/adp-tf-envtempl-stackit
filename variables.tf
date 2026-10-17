@@ -367,6 +367,19 @@ variable "create_service_accounts" {
   default     = false
 }
 
+variable "vault_writer_username" {
+  description = "Secrets Manager writer username. Required when create_service_accounts=true. Obtain from terraform output after the first run."
+  type        = string
+  default     = ""
+}
+
+variable "vault_writer_password" {
+  description = "Secrets Manager writer password. Required when create_service_accounts=true. Obtain from terraform output after the first run."
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 variable "create_alb_service_account" {
   description = "Whether to create a STACKIT service account with alb.admin role and store its key in Secrets Manager"
   type        = bool

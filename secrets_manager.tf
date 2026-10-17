@@ -31,7 +31,7 @@ resource "stackit_service_account" "alb_controller" {
   count = var.create_alb_service_account ? 1 : 0
 
   project_id = local.project_id
-  name       = "${var.prefix}-alb-controller"
+  name       = substr("${var.prefix}-alb-ctrl", 0, 20)
 }
 
 resource "stackit_service_account_key" "alb_controller" {

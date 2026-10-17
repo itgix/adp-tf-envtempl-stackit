@@ -199,7 +199,7 @@ output "postgres_host" {
 }
 
 output "postgres_port" {
-  value = var.create_postgres ? stackit_postgresflex_user.this[0].port : null
+  value = var.create_postgres ? stackit_postgresflex_instance.this[0].connection_info.write.port : null
 }
 
 output "postgres_username" {

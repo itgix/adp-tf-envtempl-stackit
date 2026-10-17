@@ -47,8 +47,6 @@ resource "stackit_authorization_project_role_assignment" "alb_controller" {
   resource_id = local.project_id
   subject     = "serviceaccount:${stackit_service_account.alb_controller[0].email}"
   role        = "alb.admin"
-
-  depends_on = [stackit_service_account.alb_controller]
 }
 
 # Store the service account key in Secrets Manager via Vault provider
@@ -61,8 +59,6 @@ resource "vault_kv_secret_v2" "alb_controller" {
   data_json = jsonencode({
     value = stackit_service_account_key.alb_controller[0].json
   })
-
-  depends_on = [stackit_secretsmanager_instance.this, stackit_secretsmanager_user.writer]
 }
 
 # Store ESO reader credentials in Secrets Manager so ESO can bootstrap itself
@@ -76,6 +72,4 @@ resource "vault_kv_secret_v2" "eso_reader_credentials" {
     username = stackit_secretsmanager_user.reader[0].username
     password = stackit_secretsmanager_user.reader[0].password
   })
-
-  depends_on = [stackit_secretsmanager_instance.this, stackit_secretsmanager_user.writer, stackit_secretsmanager_user.reader]
 }

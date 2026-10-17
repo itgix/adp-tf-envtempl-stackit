@@ -31,12 +31,9 @@ provider "vault" {
   address          = "https://prod.sm.eu01.stackit.cloud"
   skip_child_token = true
 
-  dynamic "auth_login_userpass" {
-    for_each = local.vault_writer_username != "none" ? [1] : []
-    content {
-      username = local.vault_writer_username
-      password = local.vault_writer_password
-    }
+  auth_login_userpass {
+    username = stackit_secretsmanager_user.writer[0].username
+    password = stackit_secretsmanager_user.writer[0].password
   }
 }
 
@@ -51,9 +48,6 @@ locals {
   mongodb_name       = "${var.prefix}-mongodb"
   opensearch_name      = "${var.prefix}-opensearch"
   secrets_manager_name = "${var.prefix}-secrets"
-
-  vault_writer_username = try(stackit_secretsmanager_user.writer[0].username, var.existing_secrets_manager_writer_username, "none")
-  vault_writer_password = try(stackit_secretsmanager_user.writer[0].password, var.existing_secrets_manager_writer_password, "none")
 
   mariadb_acl_cidrs    = join(",", concat([var.network_ipv4_prefix], var.mariadb_additional_acl_cidrs))
   postgres_acl_list    = concat([var.network_ipv4_prefix], var.postgres_additional_acl_cidrs)

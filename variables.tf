@@ -361,6 +361,20 @@ variable "create_secrets_manager" {
   default     = true
 }
 
+variable "existing_secrets_manager_writer_username" {
+  description = "Writer username for an existing Secrets Manager instance. Required when create_secrets_manager is false and create_alb_service_account is true."
+  type        = string
+  default     = null
+  sensitive   = true
+}
+
+variable "existing_secrets_manager_writer_password" {
+  description = "Writer password for an existing Secrets Manager instance. Required when create_secrets_manager is false and create_alb_service_account is true."
+  type        = string
+  default     = null
+  sensitive   = true
+}
+
 variable "create_alb_service_account" {
   description = "Whether to create a STACKIT service account with alb.admin role and store its key in Secrets Manager"
   type        = bool

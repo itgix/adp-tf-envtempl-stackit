@@ -357,3 +357,7 @@ output "secrets_manager_reader_password" {
 output "create_alb_service_account" {
   value = var.create_alb_service_account
 }
+
+output "alb_controller_sa_key_secret_name" {
+  value = var.create_service_accounts && var.create_alb_service_account ? "${var.prefix}-alb-ctrl-key" : null
+}

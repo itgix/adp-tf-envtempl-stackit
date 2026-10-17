@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/vault"
       version = "~> 4.0"
     }
+    time = {
+      source  = "hashicorp/time"
+      version = "~> 0.9"
+    }
   }
 
   backend "s3" {
@@ -31,12 +35,9 @@ provider "vault" {
   address          = "https://prod.sm.eu01.stackit.cloud"
   skip_child_token = true
 
-  dynamic "auth_login_userpass" {
-    for_each = var.vault_writer_username != "" && var.vault_writer_password != "" ? [1] : []
-    content {
-      username = var.vault_writer_username
-      password = var.vault_writer_password
-    }
+  auth_login_userpass {
+    username = stackit_secretsmanager_user.writer[0].username
+    password = stackit_secretsmanager_user.writer[0].password
   }
 }
 

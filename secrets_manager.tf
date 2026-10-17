@@ -41,6 +41,13 @@ resource "stackit_service_account_key" "alb_controller" {
   service_account_email = stackit_service_account.alb_controller[0].email
 }
 
+resource "time_sleep" "alb_controller_sa_propagation" {
+  count = var.create_service_accounts && var.create_alb_service_account ? 1 : 0
+
+  create_duration = "10s"
+  depends_on      = [stackit_service_account.alb_controller]
+}
+
 resource "stackit_authorization_project_role_assignment" "alb_controller" {
   count = var.create_service_accounts && var.create_alb_service_account ? 1 : 0
 
@@ -48,7 +55,7 @@ resource "stackit_authorization_project_role_assignment" "alb_controller" {
   subject     = "serviceaccount:${stackit_service_account.alb_controller[0].email}"
   role        = "alb.admin"
 
-  depends_on = [stackit_service_account.alb_controller]
+  depends_on = [time_sleep.alb_controller_sa_propagation]
 }
 
 # Store the service account key in Secrets Manager via Vault provider

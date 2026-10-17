@@ -49,8 +49,8 @@ locals {
   opensearch_name      = "${var.prefix}-opensearch"
   secrets_manager_name = "${var.prefix}-secrets"
 
-  vault_writer_username = var.create_secrets_manager ? stackit_secretsmanager_user.writer[0].username : var.existing_secrets_manager_writer_username
-  vault_writer_password = var.create_secrets_manager ? stackit_secretsmanager_user.writer[0].password : var.existing_secrets_manager_writer_password
+  vault_writer_username = try(stackit_secretsmanager_user.writer[0].username, var.existing_secrets_manager_writer_username, "none")
+  vault_writer_password = try(stackit_secretsmanager_user.writer[0].password, var.existing_secrets_manager_writer_password, "none")
 
   mariadb_acl_cidrs    = join(",", concat([var.network_ipv4_prefix], var.mariadb_additional_acl_cidrs))
   postgres_acl_list    = concat([var.network_ipv4_prefix], var.postgres_additional_acl_cidrs)

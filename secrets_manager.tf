@@ -3,7 +3,7 @@ resource "stackit_secretsmanager_instance" "this" {
 
   project_id = local.project_id
   name       = local.secrets_manager_name
-  acls       = [var.network_ipv4_prefix]
+  acls       = concat([var.network_ipv4_prefix], var.secrets_manager_additional_acls)
 }
 
 # Write-enabled user — used by Terraform (local-exec) to store secrets

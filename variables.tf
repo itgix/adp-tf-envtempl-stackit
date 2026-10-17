@@ -361,6 +361,12 @@ variable "create_secrets_manager" {
   default     = true
 }
 
+variable "secrets_manager_additional_acls" {
+  description = "Additional CIDRs to allow access to the Secrets Manager instance, on top of network_ipv4_prefix. Use [\"0.0.0.0/0\"] to allow access from anywhere (e.g. during provisioning from a local machine)."
+  type        = list(string)
+  default     = []
+}
+
 variable "create_service_accounts" {
   description = "Global gate for all STACKIT service account creation. Requires create_secrets_manager=true on a prior run."
   type        = bool

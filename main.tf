@@ -31,9 +31,12 @@ provider "vault" {
   address          = "https://prod.sm.eu01.stackit.cloud"
   skip_child_token = true
 
-  auth_login_userpass {
-    username = local.vault_writer_username
-    password = local.vault_writer_password
+  dynamic "auth_login_userpass" {
+    for_each = local.vault_writer_username != "none" ? [1] : []
+    content {
+      username = local.vault_writer_username
+      password = local.vault_writer_password
+    }
   }
 }
 

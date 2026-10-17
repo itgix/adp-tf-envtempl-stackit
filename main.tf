@@ -32,8 +32,8 @@ provider "vault" {
   skip_child_token = true
 
   auth_login_userpass {
-    username = stackit_secretsmanager_user.writer[0].username
-    password = stackit_secretsmanager_user.writer[0].password
+    username = try(stackit_secretsmanager_user.writer[0].username, null)
+    password = try(stackit_secretsmanager_user.writer[0].password, null)
   }
 }
 

@@ -361,6 +361,12 @@ variable "create_secrets_manager" {
   default     = true
 }
 
+variable "create_service_accounts" {
+  description = "Global gate for all STACKIT service account creation. Requires create_secrets_manager=true on a prior run."
+  type        = bool
+  default     = false
+}
+
 variable "create_alb_service_account" {
   description = "Whether to create a STACKIT service account with alb.admin role and store its key in Secrets Manager"
   type        = bool

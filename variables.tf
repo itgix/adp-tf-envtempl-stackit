@@ -373,6 +373,12 @@ variable "create_service_accounts" {
   default     = false
 }
 
+variable "create_dns_service_account" {
+  description = "Whether to create a STACKIT service account with dns.admin role and store its key in Secrets Manager"
+  type        = bool
+  default     = true
+}
+
 variable "create_alb_service_account" {
   description = "Whether to create a STACKIT service account with alb.admin role and store its key in Secrets Manager"
   type        = bool

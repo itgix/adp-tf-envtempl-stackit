@@ -26,6 +26,51 @@ resource "stackit_secretsmanager_user" "reader" {
   write_enabled = false
 }
 
+# Service account for external-dns with dns.admin role
+resource "stackit_service_account" "external_dns" {
+  count = var.create_service_accounts && var.create_dns_service_account ? 1 : 0
+
+  project_id = local.project_id
+  name       = substr("${var.prefix}-ext-dns", 0, 20)
+}
+
+resource "stackit_service_account_key" "external_dns" {
+  count = var.create_service_accounts && var.create_dns_service_account ? 1 : 0
+
+  project_id            = local.project_id
+  service_account_email = stackit_service_account.external_dns[0].email
+}
+
+resource "time_sleep" "external_dns_sa_propagation" {
+  count = var.create_service_accounts && var.create_dns_service_account ? 1 : 0
+
+  create_duration = "10s"
+  depends_on      = [stackit_service_account.external_dns]
+}
+
+resource "stackit_authorization_project_role_assignment" "external_dns" {
+  count = var.create_service_accounts && var.create_dns_service_account ? 1 : 0
+
+  resource_id = local.project_id
+  subject     = stackit_service_account.external_dns[0].email
+  role        = "dns.admin"
+
+  depends_on = [time_sleep.external_dns_sa_propagation]
+}
+
+resource "vault_kv_secret_v2" "external_dns" {
+  count = var.create_service_accounts && var.create_dns_service_account && var.create_secrets_manager ? 1 : 0
+
+  mount               = stackit_secretsmanager_instance.this[0].instance_id
+  name                = "${var.prefix}-ext-dns-key"
+  delete_all_versions = true
+  data_json = jsonencode({
+    value = stackit_service_account_key.external_dns[0].json
+  })
+
+  depends_on = [stackit_secretsmanager_user.writer, stackit_service_account_key.external_dns]
+}
+
 # Service account for the ALB controller with alb.admin role
 resource "stackit_service_account" "alb_controller" {
   count = var.create_service_accounts && var.create_alb_service_account ? 1 : 0

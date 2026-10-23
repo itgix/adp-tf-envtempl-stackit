@@ -33,7 +33,7 @@ output "network_area_id" {
 }
 
 # Project
-output "project_name" {
+output "stackit_project_name" {
   value = local.project_name
 }
 

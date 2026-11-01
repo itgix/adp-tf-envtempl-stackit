@@ -582,19 +582,27 @@ TERRAFORM SETUP:
   This project creates the following resources when create_secrets_manager = true:
 
   - stackit_secretsmanager_instance  -> the secrets store, ACL-restricted to network_ipv4_prefix
-  - stackit_secretsmanager_user (writer) -> write-enabled, used by Terraform local-exec to push secrets
+  - stackit_secretsmanager_user (writer) -> write-enabled, used by the Vault provider to push secrets
   - stackit_secretsmanager_user (reader) -> read-only, for workloads inside the cluster
-  - null_resource per database -> calls the Secrets Manager API via curl to store credentials
+  - vault_kv_secret_v2 per database -> stores credentials into Secrets Manager via the Vault provider
 
   NOTE: The STACKIT Terraform provider does not have a resource for writing individual secret
-  values. Secrets are pushed via the Secrets Manager HTTP API using a local-exec provisioner.
-  The null_resource re-runs automatically if credentials change (via triggers).
+  values. Secrets are pushed via the hashicorp/vault provider using vault_kv_secret_v2,
+  which talks to STACKIT's Secrets Manager Vault-compatible API.
 
-  Secrets are stored as JSON objects under these keys:
-    mariadb   -> { host, port, username, password, uri }
-    postgres  -> { host, port, username, password }
-    redis     -> { host, port, username, password, uri }
-    mongodb   -> { host, port, username, password, uri }
+  Secrets are stored as JSON objects via vault_kv_secret_v2 under these keys:
+
+    Service      Secret name                    Fields stored
+    ----------   ----------------------------   ------------------------------------------
+    MariaDB      {prefix}-mariadb-credentials   host, port, username, password, uri
+    PostgreSQL   {prefix}-postgres-credentials  host, port, username, password, database
+    Redis        {prefix}-redis-credentials     host, port, username, password
+    MongoDB      {prefix}-mongodb-credentials   host, port, username, password, database
+    OpenSearch   {prefix}-opensearch-credentials host, port, username, password
+
+  Each secret is only created when both the database toggle and create_secrets_manager are true.
+  The vault_kv_secret_v2 resource depends on stackit_secretsmanager_user.writer so the
+  Vault provider is authenticated before any secret write is attempted.
 
   Toggle:
     create_secrets_manager = true   -> creates the instance and pushes all enabled DB credentials

@@ -153,6 +153,11 @@ output "mariadb_username" {
   value = var.create_mariadb ? stackit_mariadb_credential.this[0].username : null
 }
 
+output "mariadb_password" {
+  value     = var.create_mariadb ? stackit_mariadb_credential.this[0].password : null
+  sensitive = true
+}
+
 # PostgreSQL
 output "create_postgres" {
   value = var.create_postgres
@@ -206,6 +211,11 @@ output "postgres_username" {
   value = var.create_postgres ? stackit_postgresflex_user.this[0].username : null
 }
 
+output "postgres_password" {
+  value     = var.create_postgres ? stackit_postgresflex_user.this[0].password : null
+  sensitive = true
+}
+
 # Redis
 output "create_redis" {
   value = var.create_redis
@@ -237,6 +247,11 @@ output "redis_port" {
 
 output "redis_username" {
   value = var.create_redis ? stackit_valkey_credential.this[0].username : null
+}
+
+output "redis_password" {
+  value     = var.create_redis ? stackit_valkey_credential.this[0].password : null
+  sensitive = true
 }
 
 # MongoDB
@@ -296,6 +311,11 @@ output "mongodb_username" {
   value = var.create_mongodb ? stackit_mongodbflex_user.this[0].username : null
 }
 
+output "mongodb_password" {
+  value     = var.create_mongodb ? stackit_mongodbflex_user.this[0].password : null
+  sensitive = true
+}
+
 # OpenSearch
 output "create_opensearch" {
   value = var.create_opensearch
@@ -327,6 +347,11 @@ output "opensearch_port" {
 
 output "opensearch_username" {
   value = var.create_opensearch ? stackit_opensearch_credential.this[0].username : null
+}
+
+output "opensearch_password" {
+  value     = var.create_opensearch ? stackit_opensearch_credential.this[0].password : null
+  sensitive = true
 }
 
 # Secrets Manager

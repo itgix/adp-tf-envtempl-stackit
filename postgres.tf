@@ -40,3 +40,20 @@ resource "stackit_postgresflex_user" "this" {
   username    = "appuser"
   roles       = ["login"]
 }
+
+resource "vault_kv_secret_v2" "postgres_credentials" {
+  count = var.create_postgres && var.create_secrets_manager ? 1 : 0
+
+  mount               = stackit_secretsmanager_instance.this[0].instance_id
+  name                = "${var.prefix}-postgres-credentials"
+  delete_all_versions = true
+  data_json = jsonencode({
+    host     = stackit_postgresflex_instance.this[0].connection_info.write.host
+    port     = stackit_postgresflex_instance.this[0].connection_info.write.port
+    username = stackit_postgresflex_user.this[0].username
+    password = stackit_postgresflex_user.this[0].password
+    database = "postgres"
+  })
+
+  depends_on = [stackit_secretsmanager_user.writer, stackit_postgresflex_user.this]
+}

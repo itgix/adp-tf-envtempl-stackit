@@ -158,6 +158,10 @@ output "mariadb_password" {
   sensitive = true
 }
 
+output "mariadb_secret_name" {
+  value = var.create_mariadb && var.create_secrets_manager ? "${var.prefix}-mariadb-credentials" : null
+}
+
 # PostgreSQL
 output "create_postgres" {
   value = var.create_postgres
@@ -216,6 +220,10 @@ output "postgres_password" {
   sensitive = true
 }
 
+output "postgres_secret_name" {
+  value = var.create_postgres && var.create_secrets_manager ? "${var.prefix}-postgres-credentials" : null
+}
+
 # Redis
 output "create_redis" {
   value = var.create_redis
@@ -252,6 +260,10 @@ output "redis_username" {
 output "redis_password" {
   value     = var.create_redis ? stackit_valkey_credential.this[0].password : null
   sensitive = true
+}
+
+output "redis_secret_name" {
+  value = var.create_redis && var.create_secrets_manager ? "${var.prefix}-redis-credentials" : null
 }
 
 # MongoDB
@@ -316,6 +328,10 @@ output "mongodb_password" {
   sensitive = true
 }
 
+output "mongodb_secret_name" {
+  value = var.create_mongodb && var.create_secrets_manager ? "${var.prefix}-mongodb-credentials" : null
+}
+
 # OpenSearch
 output "create_opensearch" {
   value = var.create_opensearch
@@ -352,6 +368,10 @@ output "opensearch_username" {
 output "opensearch_password" {
   value     = var.create_opensearch ? stackit_opensearch_credential.this[0].password : null
   sensitive = true
+}
+
+output "opensearch_secret_name" {
+  value = var.create_opensearch && var.create_secrets_manager ? "${var.prefix}-opensearch-credentials" : null
 }
 
 # Secrets Manager

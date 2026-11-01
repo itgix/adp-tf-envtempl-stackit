@@ -50,5 +50,5 @@ resource "vault_kv_secret_v2" "mongodb_credentials" {
     database = stackit_mongodbflex_user.this[0].database
   })
 
-  depends_on = [stackit_secretsmanager_user.writer, stackit_mongodbflex_user.this]
+  depends_on = [stackit_secretsmanager_instance.this, stackit_secretsmanager_user.writer, stackit_mongodbflex_user.this]
 }

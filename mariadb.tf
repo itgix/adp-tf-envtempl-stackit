@@ -34,5 +34,5 @@ resource "vault_kv_secret_v2" "mariadb_credentials" {
     uri      = stackit_mariadb_credential.this[0].uri
   })
 
-  depends_on = [stackit_secretsmanager_user.writer, stackit_mariadb_credential.this]
+  depends_on = [stackit_secretsmanager_instance.this, stackit_secretsmanager_user.writer, stackit_mariadb_credential.this]
 }

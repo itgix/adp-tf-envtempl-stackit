@@ -55,5 +55,5 @@ resource "vault_kv_secret_v2" "postgres_credentials" {
     database = "postgres"
   })
 
-  depends_on = [stackit_secretsmanager_user.writer, stackit_postgresflex_user.this]
+  depends_on = [stackit_secretsmanager_instance.this, stackit_secretsmanager_user.writer, stackit_postgresflex_user.this]
 }

@@ -33,5 +33,5 @@ resource "vault_kv_secret_v2" "opensearch_credentials" {
     password = stackit_opensearch_credential.this[0].password
   })
 
-  depends_on = [stackit_secretsmanager_user.writer, stackit_opensearch_credential.this]
+  depends_on = [stackit_secretsmanager_instance.this, stackit_secretsmanager_user.writer, stackit_opensearch_credential.this]
 }

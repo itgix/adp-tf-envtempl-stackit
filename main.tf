@@ -12,6 +12,10 @@ terraform {
       source  = "hashicorp/time"
       version = "~> 0.9"
     }
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
   }
 
   backend "s3" {
@@ -29,6 +33,22 @@ terraform {
 provider "stackit" {
   default_region = var.region
   experiments    = ["iam"]
+}
+
+provider "aws" {
+  alias      = "stackit_s3"
+  region     = var.region
+  access_key = length(var.object_storage_buckets) > 0 ? one(values(stackit_objectstorage_credential.this)).access_key : "placeholder"
+  secret_key = length(var.object_storage_buckets) > 0 ? one(values(stackit_objectstorage_credential.this)).secret_access_key : "placeholder"
+
+  endpoints {
+    s3 = "https://object.storage.${var.region}.onstackit.cloud"
+  }
+
+  skip_credentials_validation = true
+  skip_requesting_account_id  = true
+  skip_region_validation      = true
+  s3_use_path_style           = true
 }
 
 provider "vault" {

@@ -385,3 +385,12 @@ variable "create_alb_service_account" {
   default     = true
 }
 
+# Object Storage
+variable "object_storage_buckets" {
+  description = "Map of bucket name to bucket config. Set policy to null for no bucket policy, or provide a JSON policy string."
+  type = map(object({
+    policy = optional(string, null)
+  }))
+  default = {}
+}
+

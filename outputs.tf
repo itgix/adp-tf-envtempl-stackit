@@ -414,3 +414,12 @@ output "create_alb_service_account" {
 output "alb_controller_sa_key_secret_name" {
   value = var.create_service_accounts && var.create_alb_service_account ? "${var.prefix}-alb-ctrl-key" : null
 }
+
+# Object Storage
+output "object_storage_buckets" {
+  value = { for k, v in stackit_objectstorage_bucket.this : k => {
+    url                   = v.url_path_style
+    credentials_group_urn = stackit_objectstorage_credentials_group.this[k].urn
+    secret_name           = var.create_secrets_manager ? "${var.prefix}-${k}-credentials" : null
+  }}
+}

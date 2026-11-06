@@ -385,7 +385,22 @@ variable "create_alb_service_account" {
   default     = true
 }
 
-# Object Storage
+variable "node_pool_labels" {
+  description = "Labels to apply to the node pool nodes"
+  type        = map(string)
+  default     = {}
+}
+
+variable "node_pool_taints" {
+  description = "Taints to apply to the node pool nodes"
+  type = list(object({
+    key    = string
+    value  = string
+    effect = string
+  }))
+  default = []
+}
+
 variable "object_storage_buckets" {
   description = "Map of bucket name to bucket config. Set policy to null for no bucket policy, or provide a JSON policy string."
   type = map(object({

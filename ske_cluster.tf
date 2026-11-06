@@ -12,6 +12,8 @@ resource "stackit_ske_cluster" "this" {
       minimum            = var.node_pool_min
       maximum            = var.node_pool_max
       availability_zones = var.node_pool_availability_zones
+      labels             = length(var.node_pool_labels) > 0 ? var.node_pool_labels : null
+      taints             = length(var.node_pool_taints) > 0 ? var.node_pool_taints : null
     }
   ]
 

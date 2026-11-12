@@ -126,15 +126,15 @@ output "create_mariadb" {
 }
 
 output "mariadb_name" {
-  value = local.mariadb_name
+  value = var.create_mariadb ? local.mariadb_name : null
 }
 
 output "mariadb_version" {
-  value = var.mariadb_version
+  value = var.create_mariadb ? var.mariadb_version : null
 }
 
 output "mariadb_plan_name" {
-  value = var.mariadb_plan_name
+  value = var.create_mariadb ? var.mariadb_plan_name : null
 }
 
 output "mariadb_instance_id" {
@@ -186,15 +186,15 @@ output "create_redis" {
 }
 
 output "redis_name" {
-  value = local.redis_name
+  value = var.create_redis ? local.redis_name : null
 }
 
 output "redis_version" {
-  value = var.redis_version
+  value = var.create_redis ? var.redis_version : null
 }
 
 output "redis_plan_name" {
-  value = var.redis_plan_name
+  value = var.create_redis ? var.redis_plan_name : null
 }
 
 output "redis_instance_id" {
@@ -228,39 +228,39 @@ output "create_mongodb" {
 }
 
 output "mongodb_name" {
-  value = local.mongodb_name
+  value = var.create_mongodb ? local.mongodb_name : null
 }
 
 output "mongodb_version" {
-  value = var.mongodb_version
+  value = var.create_mongodb ? var.mongodb_version : null
 }
 
 output "mongodb_replicas" {
-  value = var.mongodb_replicas
+  value = var.create_mongodb ? var.mongodb_replicas : null
 }
 
 output "mongodb_type" {
-  value = var.mongodb_type
+  value = var.create_mongodb ? var.mongodb_type : null
 }
 
 output "mongodb_backup_schedule" {
-  value = var.mongodb_backup_schedule
+  value = var.create_mongodb ? var.mongodb_backup_schedule : null
 }
 
 output "mongodb_cpu" {
-  value = var.mongodb_cpu
+  value = var.create_mongodb ? var.mongodb_cpu : null
 }
 
 output "mongodb_ram" {
-  value = var.mongodb_ram
+  value = var.create_mongodb ? var.mongodb_ram : null
 }
 
 output "mongodb_storage_class" {
-  value = var.mongodb_storage_class
+  value = var.create_mongodb ? var.mongodb_storage_class : null
 }
 
 output "mongodb_storage_size" {
-  value = var.mongodb_storage_size
+  value = var.create_mongodb ? var.mongodb_storage_size : null
 }
 
 output "mongodb_instance_id" {
@@ -294,15 +294,15 @@ output "create_opensearch" {
 }
 
 output "opensearch_name" {
-  value = local.opensearch_name
+  value = var.create_opensearch ? local.opensearch_name : null
 }
 
 output "opensearch_version" {
-  value = var.opensearch_version
+  value = var.create_opensearch ? var.opensearch_version : null
 }
 
 output "opensearch_plan_name" {
-  value = var.opensearch_plan_name
+  value = var.create_opensearch ? var.opensearch_plan_name : null
 }
 
 output "opensearch_instance_id" {

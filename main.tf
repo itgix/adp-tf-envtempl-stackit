@@ -67,14 +67,12 @@ locals {
   network_name       = "${var.prefix}-network"
   cluster_name       = "${var.prefix}-k8s"
   mariadb_name       = "${var.prefix}-mariadb"
-  postgres_name      = "${var.prefix}-postgres"
   redis_name         = "${var.prefix}-redis"
   mongodb_name       = "${var.prefix}-mongodb"
   opensearch_name      = "${var.prefix}-opensearch"
   secrets_manager_name = "${var.prefix}-secrets"
 
   mariadb_acl_cidrs    = join(",", concat([var.network_ipv4_prefix], var.mariadb_additional_acl_cidrs, var.create_cluster ? stackit_ske_cluster.this[0].egress_address_ranges : []))
-  postgres_acl_list    = concat([var.network_ipv4_prefix], var.postgres_additional_acl_cidrs, var.create_cluster ? stackit_ske_cluster.this[0].egress_address_ranges : [])
   redis_acl_cidrs      = join(",", concat([var.network_ipv4_prefix], var.redis_additional_acl_cidrs, var.create_cluster ? stackit_ske_cluster.this[0].egress_address_ranges : []))
   mongodb_acl_list     = concat([var.network_ipv4_prefix], var.mongodb_additional_acl_cidrs, var.create_cluster ? stackit_ske_cluster.this[0].egress_address_ranges : [])
   opensearch_acl_cidrs = join(",", concat([var.network_ipv4_prefix], var.opensearch_additional_acl_cidrs, var.create_cluster ? stackit_ske_cluster.this[0].egress_address_ranges : []))

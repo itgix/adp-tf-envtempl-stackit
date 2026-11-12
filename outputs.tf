@@ -163,65 +163,21 @@ output "mariadb_secret_name" {
 }
 
 # PostgreSQL
-output "create_postgres" {
-  value = var.create_postgres
+output "postgres_instances" {
+  description = "Map of PostgreSQL instance details keyed by instance name."
+  value = { for k, v in stackit_postgresflex_instance.this : k => {
+    instance_id = v.instance_id
+    host        = v.connection_info.write.host
+    port        = v.connection_info.write.port
+    username    = stackit_postgresflex_user.this[k].username
+    secret_name = var.create_secrets_manager ? "${var.prefix}-postgres-${k}-credentials" : null
+  }}
 }
 
-output "postgres_name" {
-  value = local.postgres_name
-}
-
-output "postgres_version" {
-  value = var.postgres_version
-}
-
-output "postgres_replicas" {
-  value = var.postgres_replicas
-}
-
-output "postgres_backup_schedule" {
-  value = var.postgres_backup_schedule
-}
-
-output "postgres_cpu" {
-  value = var.postgres_cpu
-}
-
-output "postgres_ram" {
-  value = var.postgres_ram
-}
-
-output "postgres_storage_class" {
-  value = var.postgres_storage_class
-}
-
-output "postgres_storage_size" {
-  value = var.postgres_storage_size
-}
-
-output "postgres_instance_id" {
-  value = var.create_postgres ? stackit_postgresflex_instance.this[0].instance_id : null
-}
-
-output "postgres_host" {
-  value = var.create_postgres ? stackit_postgresflex_instance.this[0].connection_info.write.host : null
-}
-
-output "postgres_port" {
-  value = var.create_postgres ? stackit_postgresflex_instance.this[0].connection_info.write.port : null
-}
-
-output "postgres_username" {
-  value = var.create_postgres ? stackit_postgresflex_user.this[0].username : null
-}
-
-output "postgres_password" {
-  value     = var.create_postgres ? stackit_postgresflex_user.this[0].password : null
-  sensitive = true
-}
-
-output "postgres_secret_name" {
-  value = var.create_postgres && var.create_secrets_manager ? "${var.prefix}-postgres-credentials" : null
+output "postgres_passwords" {
+  description = "Map of PostgreSQL passwords keyed by instance name."
+  sensitive   = true
+  value       = { for k, v in stackit_postgresflex_user.this : k => v.password }
 }
 
 # Redis

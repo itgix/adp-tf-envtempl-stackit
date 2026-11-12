@@ -1,57 +1,53 @@
 data "stackit_postgresflex_flavors" "this" {
-  count      = var.create_postgres ? 1 : 0
+  for_each   = var.postgres_instances
   project_id = local.project_id
 }
 
-locals {
-  postgres_flavor_id = var.create_postgres ? one([
-    for f in data.stackit_postgresflex_flavors.this[0].flavors :
-    f.id if f.cpu == var.postgres_cpu && f.memory == var.postgres_ram && lower(f.node_type) == lower(var.postgres_node_type)
-  ]) : null
-}
-
 resource "stackit_postgresflex_instance" "this" {
-  count = var.create_postgres ? 1 : 0
+  for_each = var.postgres_instances
 
   depends_on = [stackit_secretsmanager_instance.this]
 
   project_id      = local.project_id
-  name            = local.postgres_name
-  version         = var.postgres_version
-  backup_schedule = var.postgres_backup_schedule
-  flavor_id       = local.postgres_flavor_id
-  retention_days  = var.postgres_retention_days
+  name            = "${var.prefix}-postgres-${each.key}"
+  version         = each.value.version
+  backup_schedule = each.value.backup_schedule
+  flavor_id = one([
+    for f in data.stackit_postgresflex_flavors.this[each.key].flavors :
+    f.id if f.cpu == each.value.cpu && f.memory == each.value.ram && lower(f.node_type) == lower(each.value.node_type)
+  ])
+  retention_days = each.value.retention_days
 
   network = {
-    acl = local.postgres_acl_list
+    acl = concat([var.network_ipv4_prefix], each.value.additional_acl_cidrs, var.additional_acl_cidrs, var.postgres_additional_acl_cidrs, var.create_cluster ? stackit_ske_cluster.this[0].egress_address_ranges : [])
   }
 
   storage = {
-    class = var.postgres_storage_class
-    size  = var.postgres_storage_size
+    class = each.value.storage_class
+    size  = each.value.storage_size
   }
 }
 
 resource "stackit_postgresflex_user" "this" {
-  count = var.create_postgres ? 1 : 0
+  for_each = var.postgres_instances
 
   project_id  = local.project_id
-  instance_id = stackit_postgresflex_instance.this[0].instance_id
+  instance_id = stackit_postgresflex_instance.this[each.key].instance_id
   username    = "appuser"
   roles       = ["login"]
 }
 
 resource "vault_kv_secret_v2" "postgres_credentials" {
-  count = var.create_postgres && var.create_secrets_manager ? 1 : 0
+  for_each = var.create_secrets_manager ? var.postgres_instances : {}
 
   mount               = stackit_secretsmanager_instance.this[0].instance_id
-  name                = "${var.prefix}-postgres-credentials"
+  name                = "${var.prefix}-postgres-${each.key}-credentials"
   delete_all_versions = true
   data_json = jsonencode({
-    host     = stackit_postgresflex_instance.this[0].connection_info.write.host
-    port     = stackit_postgresflex_instance.this[0].connection_info.write.port
-    username = stackit_postgresflex_user.this[0].username
-    password = stackit_postgresflex_user.this[0].password
+    host     = stackit_postgresflex_instance.this[each.key].connection_info.write.host
+    port     = stackit_postgresflex_instance.this[each.key].connection_info.write.port
+    username = stackit_postgresflex_user.this[each.key].username
+    password = stackit_postgresflex_user.this[each.key].password
     database = "postgres"
   })
 

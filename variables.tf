@@ -158,29 +158,21 @@ variable "mariadb_plan_name" {
   default     = "stackit-mariadb-1.4.10-single"
 }
 
-variable "postgres_node_type" {
-  description = "PostgreSQL node type: single or replica"
-  type        = string
-  default     = "single"
-}
-
 # PostgreSQL
-variable "create_postgres" {
-  description = "Whether to create a PostgresFlex instance"
-  type        = bool
-  default     = false
-}
-
-variable "postgres_version" {
-  description = "PostgreSQL version"
-  type        = string
-  default     = "16"
-}
-
-variable "postgres_replicas" {
-  description = "Number of PostgreSQL replicas (1 = single, 3 = HA)"
-  type        = number
-  default     = 1
+variable "postgres_instances" {
+  description = "Map of PostgresFlex instances to create. Key is used as the instance name suffix (e.g. 'main' -> '<prefix>-postgres-main')."
+  type = map(object({
+    version              = optional(string, "16")
+    cpu                  = optional(number, 2)
+    ram                  = optional(number, 4)
+    node_type            = optional(string, "single")
+    storage_class        = optional(string, "premium-perf2-stackit")
+    storage_size         = optional(number, 20)
+    backup_schedule      = optional(string, "0 2 * * *")
+    retention_days       = optional(number, 32)
+    additional_acl_cidrs = optional(list(string), [])
+  }))
+  default = {}
 }
 
 variable "additional_acl_cidrs" {
@@ -205,42 +197,6 @@ variable "redis_additional_acl_cidrs" {
   description = "Additional CIDRs to allow access to Redis, on top of network_ipv4_prefix"
   type        = list(string)
   default     = []
-}
-
-variable "postgres_backup_schedule" {
-  description = "Backup schedule in cron format"
-  type        = string
-  default     = "0 2 * * *"
-}
-
-variable "postgres_cpu" {
-  description = "Number of CPUs for the PostgreSQL instance"
-  type        = number
-  default     = 2
-}
-
-variable "postgres_ram" {
-  description = "Amount of RAM in GB for the PostgreSQL instance"
-  type        = number
-  default     = 4
-}
-
-variable "postgres_storage_class" {
-  description = "Storage class for the PostgreSQL instance (e.g. premium-perf2-stackit)"
-  type        = string
-  default     = "premium-perf2-stackit"
-}
-
-variable "postgres_storage_size" {
-  description = "Storage size in GB for the PostgreSQL instance"
-  type        = number
-  default     = 20
-}
-
-variable "postgres_retention_days" {
-  description = "Number of days to retain PostgreSQL backups (32-90)"
-  type        = number
-  default     = 32
 }
 
 # Redis

@@ -34,7 +34,7 @@ resource "stackit_postgresflex_user" "this" {
   project_id  = local.project_id
   instance_id = stackit_postgresflex_instance.this[each.key].instance_id
   username    = "appuser"
-  roles       = ["login"]
+  roles       = ["login", "createdb"]
 }
 
 resource "vault_kv_secret_v2" "postgres_credentials" {

@@ -5,17 +5,30 @@ resource "stackit_ske_cluster" "this" {
   name                   = local.cluster_name
   kubernetes_version_min = var.kubernetes_version
 
-  node_pools = [
-    {
-      name               = "pool-1"
-      machine_type       = var.node_pool_machine_type
-      minimum            = var.node_pool_min
-      maximum            = var.node_pool_max
-      availability_zones = var.node_pool_availability_zones
-      labels             = length(var.node_pool_labels) > 0 ? var.node_pool_labels : null
-      taints             = length(var.node_pool_taints) > 0 ? var.node_pool_taints : null
-    }
-  ]
+  node_pools = concat(
+    [
+      {
+        name               = "pool-1"
+        machine_type       = var.node_pool_machine_type
+        minimum            = var.node_pool_min
+        maximum            = var.node_pool_max
+        availability_zones = var.node_pool_availability_zones
+        labels             = length(var.node_pool_labels) > 0 ? var.node_pool_labels : null
+        taints             = length(var.node_pool_taints) > 0 ? var.node_pool_taints : null
+      }
+    ],
+    [
+      for name, p in var.additional_node_pools : {
+        name               = name
+        machine_type       = p.machine_type
+        minimum            = p.minimum
+        maximum            = p.maximum
+        availability_zones = p.availability_zones
+        labels             = length(p.labels) > 0 ? p.labels : null
+        taints             = length(p.taints) > 0 ? p.taints : null
+      }
+    ]
+  )
 
   network = {
     id = stackit_network.this.network_id

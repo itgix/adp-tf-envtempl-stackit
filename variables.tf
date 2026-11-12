@@ -357,6 +357,29 @@ variable "node_pool_taints" {
   default = []
 }
 
+variable "additional_node_pools" {
+  description = "Extra SKE node pools on top of 'pool-1', keyed by pool name. 'pool-1' is configured by the node_pool_* variables."
+  type = map(object({
+    machine_type       = string
+    minimum            = number
+    maximum            = number
+    availability_zones = list(string)
+    labels             = optional(map(string), {})
+    taints = optional(list(object({
+      key    = string
+      value  = string
+      effect = string
+    })), [])
+  }))
+  default  = {}
+  nullable = false
+
+  validation {
+    condition     = !contains(keys(var.additional_node_pools), "pool-1")
+    error_message = "additional_node_pools must not use the name 'pool-1', which is reserved for the main node pool."
+  }
+}
+
 variable "object_storage_buckets" {
   description = "Map of bucket name to bucket config. Set policy to null for no bucket policy, or provide a JSON policy string."
   type = map(object({

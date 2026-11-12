@@ -1,7 +1,7 @@
 variable "create_project" {
   description = "Whether to create a new STACKIT project. If false, existing_project_id must be set."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "existing_project_id" {
@@ -18,7 +18,7 @@ variable "existing_project_id" {
 variable "create_network_area" {
   description = "Whether to create a new Network Area. If false, existing_network_area_id must be set."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "existing_network_area_id" {
@@ -82,7 +82,7 @@ variable "create_cluster" {
 variable "enable_alb_extension" {
   description = "Whether to enable the STACKIT Application Load Balancer extension on the SKE cluster"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "kubernetes_version" {
